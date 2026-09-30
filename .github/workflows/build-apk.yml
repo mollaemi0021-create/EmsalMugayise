@@ -1,0 +1,36 @@
+name: Android APK Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu götür
+        uses: actions/checkout@v4
+
+      - name: Java qur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle qur
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Gradle Wrapper yarat
+        run: gradle wrapper --gradle-version 9.6
+
+      - name: APK hazırla
+        run: ./gradlew assembleDebug
+
+      - name: APK-ni saxla
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmsalMugayise-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
